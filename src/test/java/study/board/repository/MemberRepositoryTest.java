@@ -18,8 +18,8 @@ class MemberRepositoryTest {
 
     @Test
     public void testMember(){
-        Member member1 = new Member("userA");
-        Member member2 = new Member("userB");
+        Member member1 = new Member("userA","1234");
+        Member member2 = new Member("userB","1234");
         memberRepository.save(member1);
         memberRepository.save(member2);
         List<Member> all = memberRepository.findAll();
@@ -32,8 +32,8 @@ class MemberRepositoryTest {
     }
     @Test
     public void testMemberService(){
-        Member member1 = new Member("userA");
-        Member member2 = new Member("userB");
+        Member member1 = new Member("userA","1234");
+        Member member2 = new Member("userB","1234");
         memberRepository.save(member1);
         memberRepository.save(member2);
         List<Member> all = memberRepository.findAll();

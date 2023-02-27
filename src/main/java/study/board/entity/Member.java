@@ -1,6 +1,7 @@
 package study.board.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,10 @@ public class Member {
     @GeneratedValue
     @Column(name = "member_id")
     private Long id;
+    @NotEmpty
     private String username;
+    @NotEmpty
+    private String password;
     @OneToMany(mappedBy = "member")
     private List<Posts> posts = new ArrayList<>();
     @Embedded
@@ -24,7 +28,8 @@ public class Member {
     protected Member() {
     }
 
-    public Member(String username) {
+    public Member(String username, String password) {
         this.username = username;
+        this.password = password;
     }
 }

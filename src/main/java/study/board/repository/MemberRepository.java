@@ -5,11 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import study.board.entity.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     //유저 이름으로 멤버 리스트 조회
-    List<Member> findByUsername(String username);
-
+    //List<Member> findByUsernameList(String username);
+    Optional<Member> findByUsername(String username);
     //멤버리스트에 유저이름 리스트만 조회
     @Query("select m.username from Member m")
     List<String> findUsernameList();

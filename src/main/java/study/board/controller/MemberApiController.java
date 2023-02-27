@@ -7,10 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import study.board.Service.LoginService;
 import study.board.dto.MemberDto;
 import study.board.entity.Member;
 import study.board.repository.MemberRepository;
@@ -24,6 +22,10 @@ import java.util.stream.Collectors;
 public class MemberApiController {
 
     private final MemberRepository memberRepository;
+    private final LoginService loginservice;
+
+
+
     @GetMapping("/api/members")
     public Result memberList() {
         List<Member> members = memberRepository.findAll();
@@ -34,9 +36,19 @@ public class MemberApiController {
 
     @PostMapping("/api/register")
     public CreateMemberResponse register(@RequestBody @Valid CreateMemberRequest request) {
-        Member member = new Member(request.getName());
+        Member member = new Member(request.getName(), request.getPassword());
         Member save = memberRepository.save(member);
         return new CreateMemberResponse(save.getId());
+    }
+
+    @PostMapping("/api/login")
+    public Member login(@RequestBody @Valid CreateMemberRequest request){
+        Member loginMember = loginservice.Login(request.getName(), request.getPassword());
+        if(loginMember == null){
+            throw new IllegalArgumentException("사용자 정보가 일치하지 않음.");
+        }else {
+            return loginMember;
+        }
     }
 
 
@@ -60,12 +72,14 @@ public class MemberApiController {
     private static class CreateMemberRequest {
         @NotEmpty
         private String name;
+        @NotEmpty
+        private String password;
     }
 
     @PostConstruct
     public void init(){
         for (int i = 1; i < 10; i++) {
-            memberRepository.save(new Member("user" + i));
+            memberRepository.save(new Member("user" + i,"1234"+i+"!"));
         }
     }
 }
