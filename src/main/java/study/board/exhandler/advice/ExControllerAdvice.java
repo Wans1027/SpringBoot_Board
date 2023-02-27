@@ -26,10 +26,10 @@ public class ExControllerAdvice {
         ErrorResult errorResult = new ErrorResult("User-Ex", e.getMessage());
         return new ResponseEntity(errorResult, HttpStatus.BAD_REQUEST);
     }
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler
-    public ErrorResult exHandler(Exception e) {
-
-        return new ErrorResult("Ex", "내부오류");
-    }
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ExceptionHandler
+//    public ErrorResult exHandler(Exception e) {
+//
+//        return new ErrorResult("Ex", "내부오류");
+//    }
 }

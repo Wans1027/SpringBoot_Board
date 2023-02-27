@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/api")
 public class MemberApiController {
 
     private final MemberRepository memberRepository;
@@ -26,7 +27,7 @@ public class MemberApiController {
 
 
 
-    @GetMapping("/api/members")
+    @GetMapping("/members")
     public Result memberList() {
         List<Member> members = memberRepository.findAll();
         List<MemberDto> collect = members.stream().map(m -> new MemberDto(m.getUsername())).collect(Collectors.toList());
@@ -34,20 +35,20 @@ public class MemberApiController {
         return new Result(collect, collect.size());
     }
 
-    @PostMapping("/api/register")
+    @PostMapping("/register")
     public CreateMemberResponse register(@RequestBody @Valid CreateMemberRequest request) {
         Member member = new Member(request.getName(), request.getPassword());
         Member save = memberRepository.save(member);
         return new CreateMemberResponse(save.getId());
     }
 
-    @PostMapping("/api/login")
-    public Member login(@RequestBody @Valid CreateMemberRequest request){
+    @PostMapping("/login")
+    public CreateMemberResponse login(@RequestBody @Valid CreateMemberRequest request){
         Member loginMember = loginservice.Login(request.getName(), request.getPassword());
         if(loginMember == null){
             throw new IllegalArgumentException("사용자 정보가 일치하지 않음.");
         }else {
-            return loginMember;
+            return new CreateMemberResponse(loginMember.getId());
         }
     }
 
@@ -81,5 +82,6 @@ public class MemberApiController {
         for (int i = 1; i < 10; i++) {
             memberRepository.save(new Member("user" + i,"1234"+i+"!"));
         }
+
     }
 }
