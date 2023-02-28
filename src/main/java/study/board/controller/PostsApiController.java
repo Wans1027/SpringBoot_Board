@@ -57,6 +57,13 @@ public class PostsApiController {
         return new Result(postDto, postDto.size());
     }
 
+    @GetMapping("/posts-entity")
+    public List<PostsDto> loadAllPostsTest(){
+        List<Posts> posts = postsRepository.findAll();
+        List<PostsDto> postDto = posts.stream().map(p -> new PostsDto(p.getId(), p.getMember().getId(), p.getTitle())).collect(Collectors.toList());
+        return postDto;
+    }
+
 
     @Data
     @AllArgsConstructor
