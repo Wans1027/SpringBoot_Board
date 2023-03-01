@@ -2,13 +2,16 @@ package study.board.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
 @DynamicInsert//columnDefault 쓰려면 써야됨
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Posts {
     @Id
     @GeneratedValue
@@ -17,19 +20,24 @@ public class Posts {
     @NotEmpty
     private String title;
 
-    private String mainText;
+
     //@ColumnDefault("10")
     private int likes = 10;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+    /**
+     * name은 단순하게 매핑할 외래 키의 이름, 즉 컬럼 명을 만들어주는 것이며,
+     * referencedColumnName은 해당 외래 키가 대상이 되는 테이블의 어떤 컬럼을 참조하는지를 지정해주는 것입니다.
+     */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mainText_id")
+    private MainText mainText;
 
-    protected Posts(){}
-
-    public Posts(String title, String mainText, Member member){
+    public Posts(String title, Member member, MainText mainText){
         this.title = title;
-        this.mainText = mainText;
         this.member = member;
+        this.mainText = mainText;
     }
 
 

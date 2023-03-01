@@ -22,8 +22,8 @@ public class Member {
     private String password;
     @OneToMany(mappedBy = "member")
     private List<Posts> posts = new ArrayList<>();
-    @Embedded
-    private Address address;
+    /*@Embedded
+    private UserInfo userInfo;*/
 
     protected Member() {
     }
