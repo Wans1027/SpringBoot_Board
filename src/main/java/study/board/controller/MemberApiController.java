@@ -77,11 +77,10 @@ public class MemberApiController {
         private String password;
     }
 
-    @PostConstruct
+
     public void init(){
         for (int i = 1; i < 10; i++) {
             memberRepository.save(new Member("user" + i,"1234"+i+"!"));
         }
-
     }
 }
