@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import study.board.dto.PostsDto;
@@ -39,28 +40,36 @@ public class PostsApiController {
     @GetMapping("/posts/{id}") // 쿼리 두번
     public Result postListById(@PathVariable("id") Long id){
         List<Posts> posts = postsRepository.findPostByMember(memberRepository.findById(id).get());
-        List<PostsDto> postsDto = posts.stream().map(p -> new PostsDto(p.getId(),p.getMember().getId(),p.getTitle())).collect(Collectors.toList());
+        List<PostsDto> postsDto = posts.stream()
+                .map(p -> new PostsDto(p.getId(),p.getMember().getId(), p.getMember().getUsername(),p.getTitle(),p.getLikes()))
+                .collect(Collectors.toList());
         return new Result(postsDto, postsDto.size());
     }
 
     @GetMapping("/postsV2/{id}") //쿼리 한번 fetchJoin
     public Result postListByIdV2(@PathVariable("id") Long id){
         List<Posts> posts = postsRepository.findAll().stream().filter(p -> p.getMember().getId().equals(id)).collect(Collectors.toList());
-        List<PostsDto> postsDto = posts.stream().map(p -> new PostsDto(p.getId(), p.getMember().getId(), p.getTitle())).collect(Collectors.toList());
+        List<PostsDto> postsDto = posts.stream()
+                .map(p -> new PostsDto(p.getId(), p.getMember().getId(), p.getMember().getUsername(), p.getTitle(),p.getLikes()))
+                .collect(Collectors.toList());
         return new Result(postsDto, postsDto.size());
     }
 
     @GetMapping("/posts")
     public Result loadAllPosts(){
         List<Posts> posts = postsRepository.findAll();
-        List<PostsDto> postDto = posts.stream().map(p -> new PostsDto(p.getId(), p.getMember().getId(), p.getTitle())).collect(Collectors.toList());
+        List<PostsDto> postDto = posts.stream()
+                .map(p -> new PostsDto(p.getId(), p.getMember().getId(), p.getMember().getUsername(), p.getTitle(),p.getLikes()))
+                .collect(Collectors.toList());
         return new Result(postDto, postDto.size());
     }
 
     @GetMapping("/posts-entity")
     public List<PostsDto> loadAllPostsTest(){
         List<Posts> posts = postsRepository.findAll();
-        List<PostsDto> postDto = posts.stream().map(p -> new PostsDto(p.getId(), p.getMember().getId(), p.getTitle())).collect(Collectors.toList());
+        List<PostsDto> postDto = posts.stream()
+                .map(p -> new PostsDto(p.getId(), p.getMember().getId(), p.getMember().getUsername(), p.getTitle(),p.getLikes()))
+                .collect(Collectors.toList());
         return postDto;
     }
 
@@ -90,12 +99,6 @@ public class PostsApiController {
         CreatePostResponse(Long id){
             this.id = id;
         }
-    }
-
-
-    @PostConstruct
-    public void postInit(){
-
     }
 
 

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 public class PostsDto {
     private Long id;
     private Long memberId;
+    private String writer;
     private String title;
+    private Integer likes;
 
 }
