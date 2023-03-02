@@ -15,7 +15,7 @@ public class MainText {
     private Long id;
 
     private String textMain;
-    @OneToOne(mappedBy = "mainText",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "mainText",fetch = FetchType.LAZY)//읽기전용
     private Posts posts;
 
     public MainText(String textMain) {

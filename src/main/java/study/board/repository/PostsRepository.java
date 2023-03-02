@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import study.board.entity.Comment;
 import study.board.entity.Member;
 import study.board.entity.Posts;
 
@@ -27,4 +28,5 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
     @EntityGraph(attributePaths = {"member","mainText"})
     @Query("select p from Posts p where p.id = :id")
     Optional<Posts> findMainTextById(@Param("id") Long id);
+
 }

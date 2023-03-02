@@ -5,8 +5,10 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +35,9 @@ public class Posts {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mainText_id")
     private MainText mainText;
+
+    @OneToMany(mappedBy = "comment")
+    private List<Comment> comment = new ArrayList<>();
 
     public Posts(String title, Member member, MainText mainText){
         this.title = title;

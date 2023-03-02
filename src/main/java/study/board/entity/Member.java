@@ -25,6 +25,9 @@ public class Member {
     /*@Embedded
     private UserInfo userInfo;*/
 
+    @OneToMany(mappedBy = "comment")
+    private List<Comment> comments = new ArrayList<>();
+
     protected Member() {
     }
 
