@@ -28,9 +28,7 @@ public class PostsApiController {
     private final MemberRepository memberRepository;
     private final MainTextRepository mainTextRepository;
 
-    private static PostsDto changePostsDto(Posts p) {
-        return new PostsDto(p.getId(), p.getMember().getId(), p.getMember().getUsername(), p.getTitle(), p.getLikes());
-    }
+
 
     @PostMapping("/posts")
     public CreatePostResponse writePost(@RequestBody @Valid CreatePostRequest request){
@@ -57,7 +55,7 @@ public class PostsApiController {
                 .collect(Collectors.toList());
         return new Result(postsDto, postsDto.size());
     }
-
+    //모든 게시글 조회
     @GetMapping("/posts")
     public Result loadAllPosts(){
         List<PostsDto> postDto = postsRepository.findAll().stream()
@@ -84,6 +82,9 @@ public class PostsApiController {
 
     }
 
+    private static PostsDto changePostsDto(Posts p) {
+        return new PostsDto(p.getId(), p.getMember().getId(), p.getMember().getUsername(), p.getTitle(), p.getLikes(), p.getCreatedDate());
+    }
 
     @Data
     @AllArgsConstructor

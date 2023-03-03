@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @DynamicInsert//columnDefault 쓰려면 써야됨
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Posts {
+public class Posts extends TimeEntity{
     @Id
     @GeneratedValue
     @Column(name = "posts_id")
