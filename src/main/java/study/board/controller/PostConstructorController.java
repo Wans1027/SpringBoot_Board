@@ -33,7 +33,7 @@ public class PostConstructorController {
         Optional<Member> firstMember = memberRepository.findAll().stream().findFirst();
 
         for (int i = 1; i < 5; i++) {
-            MainText mainText = new MainText("본문쓰");
+            MainText mainText = new MainText("본문쓰"+i);
             mainTextRepository.save(mainText);
             Posts posts = new Posts("게시글 " + i, firstMember.get(),mainText);
             postsRepository.save(posts);
