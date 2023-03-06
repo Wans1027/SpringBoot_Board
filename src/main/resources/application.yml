@@ -13,6 +13,10 @@ spring:
         # show_sql: true
         format_sql: true
 
+jwt:
+  secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+
+
 logging.level:
   org.hibernate.SQL: debug
 # org.hibernate.type: trace

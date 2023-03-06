@@ -45,7 +45,7 @@ public class MemberApiController {
             Member save = memberRepository.save(member);
             return new CreateMemberResponse(save.getId());
         }else{
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Not equal password");
         }
     }
 
