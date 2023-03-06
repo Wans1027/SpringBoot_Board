@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import study.board.Service.LoginService;
+import study.board.Service.RegisterService;
 import study.board.dto.MemberDto;
 import study.board.entity.Member;
 import study.board.repository.MemberRepository;
@@ -24,6 +25,7 @@ public class MemberApiController {
 
     private final MemberRepository memberRepository;
     private final LoginService loginservice;
+    private final RegisterService registerService;
 
 
 
@@ -36,10 +38,15 @@ public class MemberApiController {
     }
 
     @PostMapping("/register")
-    public CreateMemberResponse register(@RequestBody @Valid CreateMemberRequest request) {
-        Member member = new Member(request.getName(), request.getPassword());
-        Member save = memberRepository.save(member);
-        return new CreateMemberResponse(save.getId());
+    public CreateMemberResponse register(@RequestBody @Valid MemberRegisterRequest request) {
+        boolean valid = registerService.validUserForm(request.name,request.password1, request.password2);
+        if (valid) {
+            Member member = new Member(request.getName(), request.getPassword1());
+            Member save = memberRepository.save(member);
+            return new CreateMemberResponse(save.getId());
+        }else{
+            throw new IllegalArgumentException();
+        }
     }
 
     @PostMapping("/login")
@@ -77,10 +84,14 @@ public class MemberApiController {
         private String password;
     }
 
-
-    public void init(){
-        for (int i = 1; i < 10; i++) {
-            memberRepository.save(new Member("user" + i,"1234"+i+"!"));
-        }
+    @Data
+    private static class MemberRegisterRequest {
+        @NotEmpty
+        private String name;
+        @NotEmpty
+        private String password1;
+        @NotEmpty
+        private String password2;
     }
+
 }

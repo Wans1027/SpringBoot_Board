@@ -47,7 +47,5 @@ public class PostConstructorController {
         Comment comment1 = commentByPostId.stream().findFirst().get();
         log.info("댓글: \"{}\", 댓글입력자: {}", comment1.getComment(), comment1.getMember().getUsername());
 
-
-
     }
 }
