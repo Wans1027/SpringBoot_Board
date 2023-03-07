@@ -22,9 +22,12 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
 
     //@Query("select m from Member m where m.username = :username and m.age = :age")
     //@Query("select p from Posts p where p.member = :member")
+
+    //멤버 입력시 해당 유저가 쓴 모든 게시글을 조회
     List<Posts> findPostByMember(Member member);
     //List<Member> findUser(@Param("username") String username, @Param("age") int age);
 
+    //게시글의 id로 본문을 조회
     @EntityGraph(attributePaths = {"member","mainText"})
     @Query("select p from Posts p where p.id = :id")
     Optional<Posts> findMainTextById(@Param("id") Long id);

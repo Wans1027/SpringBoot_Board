@@ -25,5 +25,11 @@ public class PostsDto {
         this.createdDate = createdDate;
     }
 
-
+    public PostsDto(Long id, Long memberId, String writer, String title, Integer likes) {
+        this.id = id;
+        this.memberId = memberId;
+        this.writer = writer;
+        this.title = title;
+        this.likes = likes;
+    }
 }

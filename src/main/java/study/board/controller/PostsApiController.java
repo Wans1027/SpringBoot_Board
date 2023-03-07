@@ -29,7 +29,7 @@ public class PostsApiController {
     private final MainTextRepository mainTextRepository;
 
 
-
+    //게시물쓰기
     @PostMapping("/posts")
     public CreatePostResponse writePost(@RequestBody @Valid CreatePostRequest request){
         Optional<Member> member = memberRepository.findById(request.getMemberId());

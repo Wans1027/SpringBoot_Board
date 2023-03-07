@@ -8,14 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    //유저 이름으로 멤버 리스트 조회
-    //List<Member> findByUsernameList(String username);
 
+    //아이디로 검색
     @Override
     Optional<Member> findById(Long id);
-
+    //이름으로 검색
     Optional<Member> findByUsername(String username);
-    //멤버리스트에 유저이름 리스트만 조회
+    //모든 유저이름 리스트만 조회
     @Query("select m.username from Member m")
     List<String> findUsernameList();
 

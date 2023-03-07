@@ -24,6 +24,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'//crypto
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	//implementation 'org.springframework.security:spring-security-test'

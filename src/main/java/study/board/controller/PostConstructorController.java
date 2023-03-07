@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import study.board.Service.RegisterService;
 import study.board.entity.Comment;
 import study.board.entity.MainText;
 import study.board.entity.Member;
@@ -24,11 +25,12 @@ public class PostConstructorController {
     private final MemberRepository memberRepository;
     private final MainTextRepository mainTextRepository;
     private final CommentRepository commentRepository;
+    private final RegisterService registerService;
 
     @PostConstruct
     public void init(){
         for (int i = 1; i < 11; i++) {
-            memberRepository.save(new Member("user"+i,"1234"));
+            memberRepository.save(new Member("user"+i, registerService.regBcrypt("1234")));
         }
         Optional<Member> firstMember = memberRepository.findAll().stream().findFirst();
 
@@ -42,7 +44,6 @@ public class PostConstructorController {
         //게시판테이블 1번 게시물에 회원2가 댓글을 담
         Comment comment = new Comment("댓글1", postsRepository.findAll().stream().findFirst().orElseThrow(), memberRepository.findById(2L).orElseThrow());
         commentRepository.save(comment);
-        log.info("test----------------------------------------------------------");
         List<Comment> commentByPostId = commentRepository.findCommentByPostId(1L);
         Comment comment1 = commentByPostId.stream().findFirst().get();
         log.info("댓글: \"{}\", 댓글입력자: {}", comment1.getComment(), comment1.getMember().getUsername());
