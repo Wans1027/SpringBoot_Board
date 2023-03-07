@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import study.board.dto.PostsDto;
 import study.board.entity.MainText;
@@ -56,12 +59,20 @@ public class PostsApiController {
         return new Result(postsDto, postsDto.size());
     }
     //모든 게시글 조회
-    @GetMapping("/posts")
+  /*  @GetMapping("/posts")
     public Result loadAllPosts(){
         List<PostsDto> postDto = postsRepository.findAll().stream()
                 .map(PostsApiController::changePostsDto)
                 .collect(Collectors.toList());
         return new Result(postDto, postDto.size());
+    }*/
+
+    @GetMapping("/posts")
+    public Page<PostsDto> loadAllPosts(Pageable pageable){
+        Page<Posts> posts = postsRepository.findAll(pageable);
+        Page<PostsDto> postsDto = posts.map(PostsApiController::changePostsDto);
+
+        return postsDto;
     }
 
     @GetMapping("/posts-entity")
