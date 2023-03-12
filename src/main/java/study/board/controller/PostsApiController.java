@@ -42,14 +42,15 @@ public class PostsApiController {
         return new CreatePostResponse(save.getId());
     }
 
-    @GetMapping("/posts/{id}") // 쿼리 두번
+    /*@GetMapping("/posts/{id}") // 쿼리 두번
     public Result postListById(@PathVariable("id") Long id){
         List<PostsDto> postsDto = postsRepository.findPostByMember(memberRepository.findById(id).get()).stream()
                 .map(PostsApiController::changePostsDto)
                 .collect(Collectors.toList());
         return new Result(postsDto, postsDto.size());
-    }
-    //특정id회원이 쓴 모든글 조회
+    }*/
+
+    //특정 id 회원이 쓴 모든글 조회
     @GetMapping("/postsV2/{id}") //쿼리 한번 fetchJoin
     public Result postListByIdV2(@PathVariable("id") Long id){
         List<Posts> posts = postsRepository.findAll().stream().filter(p -> p.getMember().getId().equals(id)).collect(Collectors.toList());
@@ -58,15 +59,8 @@ public class PostsApiController {
                 .collect(Collectors.toList());
         return new Result(postsDto, postsDto.size());
     }
-    //모든 게시글 조회
-  /*  @GetMapping("/posts")
-    public Result loadAllPosts(){
-        List<PostsDto> postDto = postsRepository.findAll().stream()
-                .map(PostsApiController::changePostsDto)
-                .collect(Collectors.toList());
-        return new Result(postDto, postDto.size());
-    }*/
 
+    //페이징 모든게시글 조회
     @GetMapping("/posts")
     public Page<PostsDto> loadAllPosts(Pageable pageable){
         Page<Posts> posts = postsRepository.findAll(pageable);
@@ -74,23 +68,12 @@ public class PostsApiController {
 
         return postsDto;
     }
-
-    @GetMapping("/posts-entity")
-    public List<PostsDto> loadAllPostsTest(){
-        List<Posts> posts = postsRepository.findAll();
-        List<PostsDto> postDto = posts.stream()
-                .map(PostsApiController::changePostsDto)
-                .collect(Collectors.toList());
-        return postDto;
-    }
     //게시물 아이디를 넘기면 본문반환
     @GetMapping("/post/{id}")
     public Optional<PostDto> getSinglePostData(@PathVariable("id") Long id){
         Optional<Posts> post = postsRepository.findMainTextById(id);
         Optional<PostsDto> postsDto = post.map(PostsApiController::changePostsDto);
-        Optional<PostDto> postDto = postsDto.map(p -> new PostDto(p, post.get().getMainText().getTextMain()));
-        return postDto;
-
+        return postsDto.map(p -> new PostDto(p, post.get().getMainText().getTextMain()));
     }
 
     private static PostsDto changePostsDto(Posts p) {
