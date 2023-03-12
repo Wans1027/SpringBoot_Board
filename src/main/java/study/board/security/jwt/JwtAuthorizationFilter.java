@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import study.board.entity.Member;
 import study.board.repository.MemberRepository;
+import study.board.security.SecretKey;
 import study.board.security.auth.PrincipalDetails;
 
 
@@ -29,6 +30,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
      * 만약에 권한이나 인증이 필요한 주소가 아니라면 이 필터를 안 탐.
      */
     private MemberRepository memberRepository;
+    SecretKey secretKey = new SecretKey();
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, MemberRepository memberRepository) {
         super(authenticationManager);
@@ -54,12 +56,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // 토큰 검증 (이게 인증이기 때문에 AuthenticationManager도 필요 없음)
         // 내가 SecurityContext에 직접 접근해서 세션을 만들때 자동으로 UserDetailsService에 있는
         // loadByUsername이 호출됨.
-        String username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
+        String username = JWT.require(Algorithm.HMAC512(secretKey.getKey())).build().verify(token)
                 .getClaim("username").asString();
 
         //서명이 정상적으로 됨
         if (username != null) {
-            Member member = memberRepository.findByUsername(username).get();
+            Member member = memberRepository.findByUsername(username).orElseThrow();
 
             // 인증은 토큰 검증시 끝. 인증을 하기 위해서가 아닌 스프링 시큐리티가 수행해주는 권한 처리를 위해
             // 아래와 같이 토큰을 만들어서 Authentication 객체를 강제로 만들고 그걸 세션에 저장!

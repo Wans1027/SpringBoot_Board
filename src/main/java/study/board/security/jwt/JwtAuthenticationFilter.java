@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import study.board.entity.Member;
+import study.board.security.SecretKey;
 import study.board.security.auth.PrincipalDetails;
 
 
@@ -71,7 +72,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // JWT 토큰을 만들어서 request 요청 한 사용자에게 JWT 토큰을 response 해주면 됨.
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-
+        SecretKey secretKey = new SecretKey();
         log.info("successfulAuthentication 실행됨: 인증이 완료됨.......!");
 
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
@@ -81,7 +82,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withExpiresAt(new Date(System.currentTimeMillis()+ JwtProperties.EXPIRATION_TIME))//1000=1초
                 .withClaim("id", principalDetails.getMember().getId())// member 의 id 정보
                 .withClaim("username", principalDetails.getMember().getUsername())// member 의 username 정보
-                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+                .sign(Algorithm.HMAC512(secretKey.getKey()));
 
         response.addHeader("Authorization", "Bearer "+ jwtToken);// Authorization: Bearer $token
     }
