@@ -23,7 +23,7 @@ import study.board.security.auth.PrincipalDetails;
 import java.io.IOException;
 import java.util.Date;
 
-// 스프링 키큐리티에서 UsernamePasswordAuthenticationFilter 가 있음.
+// 스프링 시큐리티에서 UsernamePasswordAuthenticationFilter 가 있음.
 // 언제 동작하냐면 /login 요청해서 username, password 전송하면 (post)
 // UsernamePasswordAuthenticationFilter 가 동작을 함.
 @RequiredArgsConstructor

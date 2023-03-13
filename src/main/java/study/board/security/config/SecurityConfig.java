@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .apply(new MyCustomDsl());
         http.authorizeRequests()
                 .requestMatchers("/api/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_USER')")
-                .requestMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
+                .requestMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().permitAll();
 
         return http.build();

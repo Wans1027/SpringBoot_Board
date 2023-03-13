@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import study.board.dto.PostsDto;
 import study.board.entity.MainText;
@@ -17,6 +19,7 @@ import study.board.entity.Posts;
 import study.board.repository.MainTextRepository;
 import study.board.repository.MemberRepository;
 import study.board.repository.PostsRepository;
+import study.board.security.auth.PrincipalDetails;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,12 +37,18 @@ public class PostsApiController {
 
     //게시물쓰기
     @PostMapping("/posts")
-    public CreatePostResponse writePost(@RequestBody @Valid CreatePostRequest request){
-        Optional<Member> member = memberRepository.findById(request.getMemberId());
-        MainText mainText = mainTextRepository.save(new MainText(request.getMainText()));
-        Posts posts = new Posts(request.getTitle(), member.orElseThrow(), mainText);
-        Posts save = postsRepository.save(posts);
-        return new CreatePostResponse(save.getId());
+    public CreatePostResponse writePost(@RequestBody @Valid CreatePostRequest request, Authentication authentication){
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        log.info("userid = {}",principal.getMember().getId());
+        if (request.getMemberId().equals(principal.getMember().getId())) {
+            Optional<Member> member = memberRepository.findById(request.getMemberId());
+            MainText mainText = mainTextRepository.save(new MainText(request.getMainText()));
+            Posts posts = new Posts(request.getTitle(), member.orElseThrow(), mainText);
+            Posts save = postsRepository.save(posts);
+            return new CreatePostResponse(save.getId());
+        } else {
+            throw new IllegalArgumentException("TokenID와 요청 ID가 일치하지 않습니다.");
+        }
     }
 
     /*@GetMapping("/posts/{id}") // 쿼리 두번

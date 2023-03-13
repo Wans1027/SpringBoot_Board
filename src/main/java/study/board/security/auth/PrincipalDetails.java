@@ -20,6 +20,7 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        log.info("UserDetails 실행됨");
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(()->member.getRoles());
 
