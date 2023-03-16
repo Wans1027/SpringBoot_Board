@@ -85,7 +85,15 @@ public class PostsApiController {
         return postsDto.map(p -> new PostDto(p, post.get().getMainText().getTextMain()));
     }
 
+    //좋아요++
+    @GetMapping("/post/like/{id}")
+    public void upLikes(@PathVariable("id") Long id){
+        Optional<Posts> post = postsRepository.findById(id);
+        post.orElseThrow().setLikes(post.get().getLikes() + 1);
+    }
+
     private static PostsDto changePostsDto(Posts p) {
+
         return new PostsDto(p.getId(), p.getMember().getId(), p.getMember().getUsername(), p.getTitle(), p.getLikes(), p.getCreatedDate());
     }
 

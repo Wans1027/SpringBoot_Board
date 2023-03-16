@@ -13,6 +13,9 @@ spring:
         # show_sql: true
         format_sql: true
 
+file:
+  dir: E:/study/MVC2/savefile/
+
 logging.level:
   org.hibernate.SQL: debug
 # org.hibernate.type: trace
