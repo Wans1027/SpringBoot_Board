@@ -4,15 +4,9 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import study.board.Service.RegisterService;
-import study.board.entity.Comment;
-import study.board.entity.MainText;
-import study.board.entity.Member;
-import study.board.entity.Posts;
-import study.board.repository.CommentRepository;
-import study.board.repository.MainTextRepository;
-import study.board.repository.MemberRepository;
-import study.board.repository.PostsRepository;
+import study.board.Service.MemberService;
+import study.board.entity.*;
+import study.board.repository.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,12 +19,13 @@ public class PostConstructorController {
     private final MemberRepository memberRepository;
     private final MainTextRepository mainTextRepository;
     private final CommentRepository commentRepository;
-    private final RegisterService registerService;
+
+    private final MemberService memberService;
 
     @PostConstruct
     public void init(){
-        for (int i = 1; i < 11; i++) {
-            memberRepository.save(new Member("user"+i, registerService.regBcrypt("1234")));
+        /*for (int i = 1; i < 11; i++) {
+            memberRepository.save(new Member("user"+i, memberService.regBcrypt("1234")));
         }
         Optional<Member> firstMember = memberRepository.findAll().stream().findFirst();
 
@@ -46,7 +41,7 @@ public class PostConstructorController {
         commentRepository.save(comment);
         List<Comment> commentByPostId = commentRepository.findCommentByPostId(1L);
         Comment comment1 = commentByPostId.stream().findFirst().get();
-        log.info("댓글: \"{}\", 댓글입력자: {}", comment1.getComment(), comment1.getMember().getUsername());
+        log.info("댓글: \"{}\", 댓글입력자: {}", comment1.getComment(), comment1.getMember().getUsername());*/
 
     }
 }

@@ -57,7 +57,7 @@ public class ExControllerAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response ServerException2(Exception e) {
-        e.printStackTrace();
+        log.error("[exceptionHandler] ex", e);
         return new Response("500", "서버 에러");
     }
 

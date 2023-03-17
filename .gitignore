@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Secret key ###
+src/main/java/study/board/security/SecretKey.java

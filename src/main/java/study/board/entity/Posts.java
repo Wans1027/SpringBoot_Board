@@ -36,7 +36,7 @@ public class Posts extends TimeEntity{
     @JoinColumn(name = "mainText_id")
     private MainText mainText;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comment = new ArrayList<>();
 
     public Posts(String title, Member member, MainText mainText){
@@ -45,5 +45,7 @@ public class Posts extends TimeEntity{
         this.mainText = mainText;
     }
 
-
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
 }
