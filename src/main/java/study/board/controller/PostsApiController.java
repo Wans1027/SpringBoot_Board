@@ -10,8 +10,9 @@ import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import study.board.Service.PostService;
 import study.board.dto.PostsDto;
 import study.board.entity.MainText;
 import study.board.entity.Member;
@@ -21,7 +22,9 @@ import study.board.repository.MemberRepository;
 import study.board.repository.PostsRepository;
 import study.board.security.auth.PrincipalDetails;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,6 +36,8 @@ public class PostsApiController {
     private final PostsRepository postsRepository;
     private final MemberRepository memberRepository;
     private final MainTextRepository mainTextRepository;
+
+    private final PostService postService;
 
 
     //게시물쓰기
@@ -51,18 +56,30 @@ public class PostsApiController {
         }
     }
 
-    /*@GetMapping("/posts/{id}") // 쿼리 두번
-    public Result postListById(@PathVariable("id") Long id){
-        List<PostsDto> postsDto = postsRepository.findPostByMember(memberRepository.findById(id).get()).stream()
-                .map(PostsApiController::changePostsDto)
-                .collect(Collectors.toList());
-        return new Result(postsDto, postsDto.size());
-    }*/
+    //게시물 수정
+    @ResponseBody
+    @Transactional
+    @PatchMapping("/posts/{id}")
+    public Map<String, Long> rewritePost(@RequestBody @Valid CreatePostRequest request, Authentication authentication, @PathVariable("id") Long postId){
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        log.info("userid = {}",principal.getMember().getId());
+        if (request.getMemberId().equals(principal.getMember().getId())) {
+            Optional<Posts> post = postsRepository.findById(postId);
+            post.orElseThrow().setTitle(request.getTitle());
+            post.orElseThrow().getMainText().setTextMain(request.getMainText());
+            Map<String,Long> responseId = new HashMap<>();
+            responseId.put("id", postId);
+            return responseId;
+        } else {
+            throw new IllegalArgumentException("TokenID와 요청 ID가 일치하지 않습니다.");
+        }
+    }
+
 
     //특정 id 회원이 쓴 모든글 조회
-    @GetMapping("/postsV2/{id}") //쿼리 한번 fetchJoin
+    @GetMapping("/posts/{id}") //쿼리 한번 fetchJoin
     public Result postListByIdV2(@PathVariable("id") Long id){
-        List<Posts> posts = postsRepository.findAll().stream().filter(p -> p.getMember().getId().equals(id)).collect(Collectors.toList());
+        List<Posts> posts = postsRepository.findAll().stream().filter(p -> p.getMember().getId().equals(id)).toList();
         List<PostsDto> postsDto = posts.stream()
                 .map(PostsApiController::changePostsDto)
                 .collect(Collectors.toList());
@@ -73,16 +90,20 @@ public class PostsApiController {
     @GetMapping("/posts")
     public Page<PostsDto> loadAllPosts(Pageable pageable){
         Page<Posts> posts = postsRepository.findAll(pageable);
-        Page<PostsDto> postsDto = posts.map(PostsApiController::changePostsDto);
 
-        return postsDto;
+        return posts.map(PostsApiController::changePostsDto);
     }
     //게시물 아이디를 넘기면 본문반환
     @GetMapping("/post/{id}")
-    public Optional<PostDto> getSinglePostData(@PathVariable("id") Long id){
+    public PostDto getSinglePostData(@PathVariable("id") Long id){
         Optional<Posts> post = postsRepository.findMainTextById(id);
         Optional<PostsDto> postsDto = post.map(PostsApiController::changePostsDto);
-        return postsDto.map(p -> new PostDto(p, post.get().getMainText().getTextMain()));
+        return getPostDto(post.orElseThrow(), postsDto.orElseThrow());
+    }
+
+    private PostDto getPostDto(Posts post, PostsDto postsDto) {
+        return new PostDto(postsDto, post.getMainText().getTextMain(),
+                (post.getMainText().getImage() == null)? " ": post.getMainText().getImage().substring(1, post.getMainText().getImage().length() - 1));
     }
 
     //좋아요++
@@ -110,6 +131,8 @@ public class PostsApiController {
     static class PostDto{
         private PostsDto postsDto;
         private String textMain;
+        private String images;
+
     }
 
     @Data

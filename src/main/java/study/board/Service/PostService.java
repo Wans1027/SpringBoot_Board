@@ -26,4 +26,6 @@ public class PostService {
     public List<Posts> findAllPosts(){
         return postsRepository.findAll();
     }
+
+
 }

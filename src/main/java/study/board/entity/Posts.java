@@ -45,6 +45,10 @@ public class Posts extends TimeEntity{
         this.mainText = mainText;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void setLikes(int likes) {
         this.likes = likes;
     }
