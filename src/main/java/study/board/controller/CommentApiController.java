@@ -30,17 +30,14 @@ public class CommentApiController {
         //게시글은 쓰는것 보다 조회하는 수가 훨얼씬 많다. 그래서 쓸때는 쿼리여려개를 하고 읽을때는 한번에 가져오자
         Optional<Member> member = memberRepository.findById(request.memberId);
         Optional<Posts> post = postsRepository.findById(request.postsId);
-        //List<Comment> alignedCommentByPostId = commentRepository.findAlignedCommentByPostId(request.postsId);
-//        if(request.hierarchy == 0){ //그냥 댓글이면
-//            //가장 높은 그룹을 DB에서 찾고
-//            Long group = commentRepository.findMaxCommentGroup(request.postsId);
-//            new Comment(post.orElseThrow(), member.orElseThrow(), request.comment, request.hierarchy, request.order, group+1);
-//        } else {//대댓글이라면
-//
-//
-//        }
-
-        Comment comment = new Comment(post.orElseThrow(), member.orElseThrow(), request.comment, request.hierarchy, request.order, request.group);
+        Comment comment;
+        if(request.hierarchy == 1){ //대댓글이라면
+            //그룹의 가장높은 order 를 DB 에서 찾고
+            Long order = commentRepository.findMaxCommentOrder(request.postsId, request.group);
+            comment = new Comment(post.orElseThrow(), member.orElseThrow(), request.comment, request.hierarchy, order+1, request.group);
+        } else{
+            comment = new Comment(post.orElseThrow(), member.orElseThrow(), request.comment, request.hierarchy, request.order, request.group);
+        }
         Comment savedComment = commentRepository.save(comment);
         return new CommentResponse(savedComment.getId());
     }
