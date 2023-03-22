@@ -22,10 +22,7 @@ import study.board.repository.MemberRepository;
 import study.board.repository.PostsRepository;
 import study.board.security.auth.PrincipalDetails;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -83,6 +80,7 @@ public class PostsApiController {
         List<PostsDto> postsDto = posts.stream()
                 .map(PostsApiController::changePostsDto)
                 .collect(Collectors.toList());
+        Collections.reverse(postsDto);
         return new Result(postsDto, postsDto.size());
     }
 
@@ -121,8 +119,8 @@ public class PostsApiController {
     @Data
     @AllArgsConstructor
     static class Result<T> {
-        private T data;
-        private int count;
+        private T content;
+        private int totalElements;
 
     }
 
