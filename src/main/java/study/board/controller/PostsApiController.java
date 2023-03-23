@@ -71,6 +71,20 @@ public class PostsApiController {
             throw new IllegalArgumentException("TokenID와 요청 ID가 일치하지 않습니다.");
         }
     }
+    //게시글 삭제
+    @Transactional
+    @DeleteMapping("/posts/{id}")
+    public void deletePost( Authentication authentication, @PathVariable("id") Long postId){
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        log.info("userid = {}",principal.getMember().getId());
+        Optional<Posts> requestPost = postsRepository.findById(postId);
+        if (requestPost.orElseThrow().getMember().getId().equals(principal.getMember().getId())) {
+            postService.deleteImages(postId);//파일삭제
+            postsRepository.delete(requestPost.orElseThrow());
+        } else {
+            throw new IllegalArgumentException("TokenID와 요청 ID가 일치하지 않습니다.");
+        }
+    }
 
 
     //특정 id 회원이 쓴 모든글 조회

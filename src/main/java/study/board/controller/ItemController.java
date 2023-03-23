@@ -1,6 +1,7 @@
 package study.board.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -9,9 +10,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 import study.board.entity.MainText;
+import study.board.exhandler.ErrorResult;
 import study.board.file.FileStore;
 import study.board.repository.MainTextRepository;
 
@@ -26,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class ItemController {
     private final FileStore fileStore;
@@ -40,6 +45,7 @@ public class ItemController {
     public void saveImage(@RequestParam("file") List<MultipartFile> form, @PathVariable("mainTextId") Long id) throws IOException {
         List<String> files = new ArrayList<>();
 
+        System.out.println("isEmpty MultipartFile = " + form);
         for (MultipartFile multipartFile : form) {
             files.add(fileStore.storeFile(multipartFile));//저장된 이름을 리스트에 추가
             //System.out.println("multipartFile = " + multipartFile.getOriginalFilename());
@@ -55,7 +61,9 @@ public class ItemController {
         //리스트를 바꾼다.
         mainText.orElseThrow().setImage(files.toString());
 
+
     }
+
 
 
 

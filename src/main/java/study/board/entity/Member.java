@@ -32,7 +32,7 @@ public class Member {
     private UserInfo userInfo;*/
     @Column(length = 50)
     private String nickName;
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "activated")
