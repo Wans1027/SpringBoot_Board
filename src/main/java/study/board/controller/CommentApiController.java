@@ -24,27 +24,35 @@ public class CommentApiController {
     private final MemberRepository memberRepository;
     private final PostsRepository postsRepository;
 
+
     //댓글쓰기
     @PostMapping("/api/comment")
     public CommentResponse writeComment(@RequestBody @Valid CommentRequest request){
         //게시글은 쓰는것 보다 조회하는 수가 훨얼씬 많다. 그래서 쓸때는 쿼리여려개를 하고 읽을때는 한번에 가져오자
+        return getCommentResponse(request);
+    }
+
+    private CommentResponse getCommentResponse(CommentRequest request) {
         Optional<Member> member = memberRepository.findById(request.memberId);
         Optional<Posts> post = postsRepository.findById(request.postsId);
         Comment comment;
         if(request.hierarchy == 1){ //대댓글이라면
-            //그룹의 가장높은 order 를 DB 에서 찾고
+            //그룹의 가장높은 order 를 DB 에서 찾고 +1을 하여 대댓글을 저장
             Long order = commentRepository.findMaxCommentOrder(request.postsId, request.group);
             comment = new Comment(post.orElseThrow(), member.orElseThrow(), request.comment, request.hierarchy, order+1, request.group);
-        } else{
+        } else{//댓글이라면
             comment = new Comment(post.orElseThrow(), member.orElseThrow(), request.comment, request.hierarchy, request.order, request.group);
         }
         Comment savedComment = commentRepository.save(comment);
         return new CommentResponse(savedComment.getId());
     }
 
+    //댓글 조회
     @GetMapping("/api/comment/{postId}")
     public Result getComments(@PathVariable("postId") Long postId) {
+        //정렬된 댓글을 가져오고
         List<Comment> alignedComments = commentRepository.findAlignedCommentByPostId(postId);
+        //Dto 로 변환한다
         List<CommentDto> commentsDto = alignedComments.stream()
                 .map(m -> new CommentDto(m.getMember().getId(),m.getMember().getUsername(), m.getComment(), m.getHierarchy(), m.getOrders(), m.getGroups(), m.getLikes(), m.getCreatedDate())).toList();
         return new Result(commentsDto, commentsDto.toArray().length);

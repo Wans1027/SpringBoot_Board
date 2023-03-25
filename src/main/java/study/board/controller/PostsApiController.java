@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -120,9 +121,13 @@ public class PostsApiController {
 
     //좋아요++
     @GetMapping("/post/like/{id}")
-    public void upLikes(@PathVariable("id") Long id){
+    @Transactional
+    public Map<String,Integer> upLikes(@PathVariable("id") Long id){
         Optional<Posts> post = postsRepository.findById(id);
         post.orElseThrow().setLikes(post.get().getLikes() + 1);
+        Map<String,Integer> like = new HashMap<>();
+        like.put("like",post.get().getLikes());
+        return like;
     }
 
     private static PostsDto changePostsDto(Posts p) {
