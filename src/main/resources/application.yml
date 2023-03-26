@@ -14,7 +14,7 @@ spring:
         format_sql: true
 
 file:
-  dir: E:\E\savefile
+  dir: E:\E\savefile\
 
 
 fcm:
