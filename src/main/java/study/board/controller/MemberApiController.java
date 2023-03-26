@@ -86,5 +86,4 @@ public class MemberApiController {
         @NotEmpty
         private String password2;
     }
-
 }
