@@ -16,6 +16,11 @@ spring:
 file:
   dir: E:/study/MVC2/savefile/
 
+fcm:
+  key:
+    path: boardfcm-4f2b0-firebase-adminsdk-hee5n-d62e26d428.json
+    scope: https://www.googleapis.com/auth/cloud-platform
+
 logging.level:
   org.hibernate.SQL: debug
 # org.hibernate.type: trace
