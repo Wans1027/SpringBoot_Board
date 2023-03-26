@@ -2,6 +2,7 @@ package study.board.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import study.board.entity.Member;
 import study.board.repository.MemberRepository;

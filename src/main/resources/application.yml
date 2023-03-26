@@ -7,14 +7,15 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         # show_sql: true
         format_sql: true
 
 file:
-  dir: E:/study/MVC2/savefile/
+  dir: E:\E\savefile
+
 
 logging.level:
   org.hibernate.SQL: debug
