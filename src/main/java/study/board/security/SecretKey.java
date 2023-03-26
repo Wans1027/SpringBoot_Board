@@ -9,5 +9,4 @@ public class SecretKey {
 
     private final String key = "showMeTheMoney";
 
-
 }
