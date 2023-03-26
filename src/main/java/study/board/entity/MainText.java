@@ -10,7 +10,7 @@ import org.apache.el.stream.Optional;
 
 @Entity
 @Getter
-@Setter
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MainText {
     @Id @GeneratedValue
@@ -25,5 +25,13 @@ public class MainText {
 
     public MainText(String textMain) {
         this.textMain = textMain;
+    }
+
+    public void setTextMain(String textMain) {
+        this.textMain = textMain;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
