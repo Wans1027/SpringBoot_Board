@@ -1,8 +1,12 @@
 package study.board.security;
 
-import lombok.Data;
 
-@Data
+import lombok.Getter;
+import org.springframework.context.annotation.Bean;
+
+@Getter
 public class SecretKey {
-    private String key = "showMeTheMoney";
+
+    private final String key = "showMeTheMoney";
+
 }
