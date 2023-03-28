@@ -5,7 +5,9 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.board.entity.FcmToken;
 import study.board.entity.Member;
+import study.board.repository.FcmTokenRepository;
 import study.board.repository.MemberRepository;
 
 import java.util.List;
@@ -18,14 +20,24 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final FcmTokenRepository fcmTokenRepository;
 
     //회원수정
     public void memberUpdate(Long id, String username) {
         //변경감지
-        Optional<Member> member = memberRepository.findById(id);
+        Optional<Member> member = findByIdService(id);
         Member getMember = member.orElseThrow(()-> new IllegalArgumentException("회원을 찾을 수 없음"));
         getMember.setUsername(username);
 
+    }
+    public void addFCMToken(Long memberId, String fcmToken){
+        Optional<Member> member = memberRepository.findById(memberId);
+        FcmToken token = new FcmToken(member.orElseThrow(), fcmToken);
+        fcmTokenRepository.save(token);
+    }
+
+    private Optional<Member> findByIdService(Long id) {
+        return memberRepository.findById(id);
     }
 
     @Transactional(readOnly = true)

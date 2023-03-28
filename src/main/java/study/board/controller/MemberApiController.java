@@ -52,6 +52,7 @@ public class MemberApiController {
     }*/
 
 
+
     @Data
     @AllArgsConstructor
     static class Result<T> {

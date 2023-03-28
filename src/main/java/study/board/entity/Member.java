@@ -35,6 +35,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<FcmToken> fcmTokens = new ArrayList<>();
+
     @Column(name = "activated")
     private boolean activated = true;
 
@@ -42,6 +45,9 @@ public class Member {
 
 
     protected Member() {
+    }
+    public void addFcmToken(FcmToken fcmToken){
+        this.fcmTokens.add(fcmToken);
     }
 
     public Member(String username, String password) {
