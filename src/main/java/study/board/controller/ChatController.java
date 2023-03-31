@@ -21,8 +21,8 @@ public class ChatController {
     }
 
     @DeleteMapping
-    public ChatRoom deleteRoom(@RequestParam String name) {
-        return chatService.createRoom(name);
+    public void deleteRoom(@RequestParam String name) {
+        chatService.deleteRoom(name);
     }
 
     @GetMapping
