@@ -27,7 +27,7 @@ public class ChatService {
     }
 
     public  List<ChatDto> findAllRoom() {
-        List<ChatDto> collect = chatRooms.values().stream().map(chatRoom -> new ChatDto(chatRoom.getRoomId(), chatRoom.getName(), chatRoom.getSessions().stream().count())).collect(Collectors.toList());
+        List<ChatDto> collect = chatRooms.values().stream().map(chatRoom -> new ChatDto(chatRoom.getRoomId(), chatRoom.getName(), (long) chatRoom.getSessions().size())).collect(Collectors.toList());
         return collect;
     }
 

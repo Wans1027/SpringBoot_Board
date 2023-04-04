@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -16,7 +17,12 @@ import study.board.websocket.service.ChatService;
 public class WebSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper;
     private final ChatService chatService;
+    //웹소켓연결
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
+    }
+    //양방향데이터 통신
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
@@ -25,5 +31,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         ChatRoom chatRoom = chatService.findRoomById(chatMessage.getRoomId());
         chatRoom.handlerActions(session, chatMessage, chatService);
+    }
+    //웹소켓 닫기
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        //chatService.deleteRoom();
     }
 }

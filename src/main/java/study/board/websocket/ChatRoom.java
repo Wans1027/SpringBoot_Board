@@ -2,6 +2,7 @@ package study.board.websocket;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.WebSocketSession;
 import study.board.websocket.dto.ChatMessage;
 import study.board.websocket.service.ChatService;
