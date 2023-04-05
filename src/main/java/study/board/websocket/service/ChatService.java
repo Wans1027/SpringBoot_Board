@@ -46,7 +46,8 @@ public class ChatService {
     }
 
     public void deleteRoom(String roomId) {
-        chatRooms.remove(roomId);
+        ChatRoom chatRoom = findRoomById(roomId);
+        if(chatRoom.getSessions().size() == 0) chatRooms.remove(roomId);
     }
 
     public <T> void sendMessage(WebSocketSession session, T message) {

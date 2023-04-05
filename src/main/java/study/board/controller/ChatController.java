@@ -1,7 +1,10 @@
 package study.board.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import study.board.dto.CommentDto;
 import study.board.websocket.ChatRoom;
 import study.board.websocket.dto.ChatDto;
 import study.board.websocket.service.ChatService;
@@ -26,8 +29,15 @@ public class ChatController {
     }
 
     @GetMapping
-    public  List<ChatDto> findAllRoom() {
+    public  Result findAllRoom() {
         List<ChatDto> allRoom = chatService.findAllRoom();
-        return allRoom;
+        return new Result(allRoom, allRoom.size());
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class Result {
+        private List<ChatDto> content;
+        private int totalElements;
     }
 }
