@@ -31,7 +31,7 @@ public class Member {
     /*@Embedded
     private UserInfo userInfo;*/
     @Column(length = 50)
-    private String nickName;
+    private String nickName = username;
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
