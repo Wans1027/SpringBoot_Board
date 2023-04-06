@@ -36,7 +36,7 @@ public class MemberService {
         fcmTokenRepository.save(token);
     }
 
-    private Optional<Member> findByIdService(Long id) {
+    public Optional<Member> findByIdService(Long id) {
         return memberRepository.findById(id);
     }
 

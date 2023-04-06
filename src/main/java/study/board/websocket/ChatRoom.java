@@ -35,10 +35,9 @@ public class ChatRoom {
         } else if (chatMessage.getType().equals(ChatMessage.MessageType.TALK)){ //메세지 보내기
             chatMessage.setMessage(chatMessage.getMessage());
             sendMessage(chatMessage, chatService);
-        } else if (chatMessage.getType().equals(ChatMessage.MessageType.OUT)){ //방 퇴장
-            sessions.remove(session);
         }
     }
+
 
     private <T> void sendMessage(T message, ChatService chatService) {
         sessions.parallelStream()

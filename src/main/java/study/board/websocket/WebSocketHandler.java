@@ -17,10 +17,12 @@ import study.board.websocket.service.ChatService;
 public class WebSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper;
     private final ChatService chatService;
+    private ChatRoom chatRoom;
+    private String roomId;
     //웹소켓연결
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
+        log.info("웹소켓이 연결됨");
     }
     //양방향데이터 통신
     @Override
@@ -28,13 +30,16 @@ public class WebSocketHandler extends TextWebSocketHandler {
         String payload = message.getPayload();
         log.info("{}", payload);
         ChatMessage chatMessage = objectMapper.readValue(payload, ChatMessage.class);
-
-        ChatRoom chatRoom = chatService.findRoomById(chatMessage.getRoomId());
+        roomId = chatMessage.getRoomId();
+        chatRoom = chatService.findRoomById(chatMessage.getRoomId());
         chatRoom.handlerActions(session, chatMessage, chatService);
     }
     //웹소켓 닫기
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         //chatService.deleteRoom();
+        chatRoom.getSessions().remove(session);
+        chatService.deleteRoom(roomId);
+        log.info("웹소켓이 닫힘");
     }
 }

@@ -40,6 +40,7 @@ public class MemberApiController {
         Member member = memberService.ValidAndBcryptReg(request.username, request.password1, request.password2);
         return new CreateMemberResponse(member.getId());
     }
+
     //로그인
     /*@PostMapping("/login")
     public CreateMemberResponse login(@RequestBody @Valid CreateMemberRequest request){
@@ -50,7 +51,11 @@ public class MemberApiController {
             return new CreateMemberResponse(loginMember.getId());
         }
     }*/
-
+    @GetMapping("/api/member/{memberId}")
+    public MemberDto getMember(@PathVariable long memberId){
+        Member member = memberService.findByIdService(memberId).orElseThrow();
+        return new MemberDto(member.getUsername(), member.getNickName());
+    }
 
 
     @Data
