@@ -32,7 +32,8 @@ public class ChatRoom {
             // message 에는 입장하였다는 메시지를 띄운다
             chatMessage.setMessage(chatMessage.getSender() + "님이 입장했습니다.");
             sendMessage(chatMessage, chatService);
-        } else if (chatMessage.getType().equals(ChatMessage.MessageType.TALK)){ //메세지 보내기
+        } else if (chatMessage.getType().equals(ChatMessage.MessageType.TALK)){
+            //메세지 보내기
             chatMessage.setMessage(chatMessage.getMessage());
             sendMessage(chatMessage, chatService);
         }

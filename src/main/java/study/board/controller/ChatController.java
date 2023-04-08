@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import study.board.dto.CommentDto;
+import study.board.dto.Result;
 import study.board.websocket.ChatRoom;
 import study.board.websocket.dto.ChatDto;
 import study.board.websocket.service.ChatService;
@@ -34,10 +35,5 @@ public class ChatController {
         return new Result(allRoom, allRoom.size());
     }
 
-    @Data
-    @AllArgsConstructor
-    static class Result {
-        private List<ChatDto> content;
-        private int totalElements;
-    }
+
 }
