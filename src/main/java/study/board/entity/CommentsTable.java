@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment extends TimeEntity{
+public class CommentsTable extends TimeEntity{
     @Id @GeneratedValue
-    @Column(name = "comment_id")
+    @Column(name = "comments_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,24 +22,24 @@ public class Comment extends TimeEntity{
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @NotEmpty
-    private String comment;
+    //@NotEmpty
+    private String com;
 
     private Long hierarchy;
     private Long orders;
-    private Long groups;
+    private Long grp;
 
     private Long likes = 0L;
 
 
 
-    public Comment(Posts posts, Member member, String comment, Long hierarchy, Long order, Long group) {
+    public CommentsTable(Posts posts, Member member, String comments, Long hierarchy, Long order, Long group) {
         this.posts = posts;
         this.member = member;
-        this.comment = comment;
+        this.com = comments;
         this.hierarchy = hierarchy;
         this.orders = order;
-        this.groups = group;
+        this.grp = group;
 
     }
     public void setLike(Long like) {
@@ -55,7 +55,7 @@ public class Comment extends TimeEntity{
     }
 
     public void setComment(String comment) {
-        this.comment = comment;
+        this.com = comment;
     }
 
     public void setHierarchy(Long hierarchy) {
@@ -67,6 +67,6 @@ public class Comment extends TimeEntity{
     }
 
     public void setGroup(Long group) {
-        this.groups = group;
+        this.grp = group;
     }
 }

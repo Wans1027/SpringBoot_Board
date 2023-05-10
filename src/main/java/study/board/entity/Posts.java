@@ -37,7 +37,7 @@ public class Posts extends TimeEntity{
     private MainText mainText;
 
     @OneToMany(mappedBy = "posts",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comment = new ArrayList<>();
+    private List<CommentsTable> comments = new ArrayList<>();
 
     public Posts(String title, Member member, MainText mainText){
         this.title = title;

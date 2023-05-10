@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import study.board.dto.CommentDto;
-import study.board.entity.Comment;
+import study.board.entity.CommentsTable;
 import study.board.entity.Member;
 import study.board.entity.Posts;
 import study.board.repository.CommentRepository;
@@ -35,26 +35,26 @@ public class CommentApiController {
     private CommentResponse getCommentResponse(CommentRequest request) {
         Optional<Member> member = memberRepository.findById(request.memberId);
         Optional<Posts> post = postsRepository.findById(request.postsId);
-        Comment comment;
+        CommentsTable commentsTable;
         if(request.hierarchy == 1){ //대댓글이라면
             //그룹의 가장높은 order 를 DB 에서 찾고 +1을 하여 대댓글을 저장
             Long order = commentRepository.findMaxCommentOrder(request.postsId, request.group);
-            comment = new Comment(post.orElseThrow(), member.orElseThrow(), request.comment, request.hierarchy, order+1, request.group);
+            commentsTable = new CommentsTable(post.orElseThrow(), member.orElseThrow(), request.comment, request.hierarchy, order+1, request.group);
         } else{//댓글이라면
-            comment = new Comment(post.orElseThrow(), member.orElseThrow(), request.comment, request.hierarchy, request.order, request.group);
+            commentsTable = new CommentsTable(post.orElseThrow(), member.orElseThrow(), request.comment, request.hierarchy, request.order, request.group);
         }
-        Comment savedComment = commentRepository.save(comment);
-        return new CommentResponse(savedComment.getId());
+        CommentsTable savedCommentsTable = commentRepository.save(commentsTable);
+        return new CommentResponse(savedCommentsTable.getId());
     }
 
     //댓글 조회
     @GetMapping("/api/comment/{postId}")
     public Result getComments(@PathVariable("postId") Long postId) {
         //정렬된 댓글을 가져오고
-        List<Comment> alignedComments = commentRepository.findAlignedCommentByPostId(postId);
+        List<CommentsTable> alignedComments = commentRepository.findAlignedCommentByPostId(postId);
         //Dto 로 변환한다
         List<CommentDto> commentsDto = alignedComments.stream()
-                .map(m -> new CommentDto(m.getMember().getId(),m.getMember().getUsername(), m.getComment(), m.getHierarchy(), m.getOrders(), m.getGroups(), m.getLikes(), m.getCreatedDate())).toList();
+                .map(m -> new CommentDto(m.getMember().getId(),m.getMember().getUsername(), m.getCom(), m.getHierarchy(), m.getOrders(), m.getGrp(), m.getLikes(), m.getCreatedDate())).toList();
         return new Result(commentsDto, commentsDto.toArray().length);
     }
 
